@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+	<id>lifeline</id>
+	<name>Life line</name>
+	<summary><![CDATA[Life line helps you to keep an overview over the most important moments of your beloved ones.]]></summary>
+	<description><![CDATA[Life line helps you to keep an overview over the most important moments of your beloved ones.]]></description>
+	<version>0.1.0</version>
+	<licence>agpl</licence>
+	<author>Joas Schilling</author>
+	<namespace>LifeLine</namespace>
+
+	<category>tools</category>
+
+	<website>https://github.com/nickv-nextcloud/lifeline</website>
+	<bugs>https://github.com/nickv-nextcloud/lifeline/issues</bugs>
+	<repository>https://github.com/nickv-nextcloud/lifeline.git</repository>
+
+	<screenshot>https://github.com/nextcloud/announcementcenter/raw/master/docs/AnnouncementCenterFrontpage.png</screenshot>
+
+	<dependencies>
+		<nextcloud min-version="21" max-version="22" />
+	</dependencies>
+
+	<navigations>
+		<navigation>
+			<name>Life line</name>
+			<route>lifeline.page.index</route>
+			<order>80</order>
+		</navigation>
+	</navigations>
+</info>
