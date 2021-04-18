@@ -28,15 +28,20 @@ namespace OCA\LifeLine\Model;
 use OCP\AppFramework\Db\Entity;
 
 /**
- * @method void setName(string $name)
- * @method string getName()
+ * @method void setLineId(int $lineId)
+ * @method int getLineId()
+ * @method void setUserId(string $userId)
+ * @method string getUserId()
  */
-class Line extends Entity {
+class Editor extends Entity {
 
+	/** @var int */
+	protected $lineId;
 	/** @var string */
-	protected $name;
+	protected $userId;
 
 	public function __construct() {
-		$this->addType('name', 'string');
+		$this->addType('line_id', 'int');
+		$this->addType('user_id', 'string');
 	}
 }

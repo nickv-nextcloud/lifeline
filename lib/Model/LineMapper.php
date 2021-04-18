@@ -25,10 +25,14 @@ declare(strict_types=1);
 
 namespace OCA\LifeLine\Model;
 
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
+use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
 /**
+ * @template-extends QBMapper<Line>
  * @method Line mapRowToEntity(array $row)
  */
 class LineMapper extends QBMapper {
@@ -39,7 +43,23 @@ class LineMapper extends QBMapper {
 
 	public function createLineFromRow(array $row): Line {
 		return $this->mapRowToEntity([
-			'id' => $row['id'],
+			'id' => (int) $row['id'],
+			'name' => $row['name'],
 		]);
+	}
+
+	/**
+	 * @param int $id
+	 * @return Line
+	 * @throws DoesNotExistException
+	 * @throws MultipleObjectsReturnedException
+	 */
+	public function findById(int $id): Line {
+		$query = $this->db->getQueryBuilder();
+		$query->select('*')
+			->from($this->getTableName())
+			->where($query->expr()->eq('id', $query->createNamedParameter($id), IQueryBuilder::PARAM_INT));
+
+		return $this->findEntity($query);
 	}
 }

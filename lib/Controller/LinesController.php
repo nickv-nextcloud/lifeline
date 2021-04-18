@@ -25,18 +25,40 @@ declare(strict_types=1);
 
 namespace OCA\LifeLine\Controller;
 
+use OCA\LifeLine\Model\Editor;
+use OCA\LifeLine\Model\EditorMapper;
+use OCA\LifeLine\Model\Line;
+use OCA\LifeLine\Model\LineMapper;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCS\OCSBadRequestException;
 use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSForbiddenException;
+use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
+use OCP\IUser;
+use OCP\IUserSession;
 
 class LinesController extends OCSController {
 
+	/** @var LineMapper */
+	protected $lineMapper;
+	/** @var EditorMapper */
+	protected $editorMapper;
+	/** @var IUserSession */
+	protected $userSession;
+
 	public function __construct(string $appName,
-								IRequest $request) {
+								IRequest $request,
+								LineMapper $lineMapper,
+								EditorMapper $editorMapper,
+								IUserSession $userSession) {
 		parent::__construct($appName, $request);
+		$this->lineMapper = $lineMapper;
+		$this->editorMapper = $editorMapper;
+		$this->userSession = $userSession;
 	}
 
 	/**
@@ -45,7 +67,18 @@ class LinesController extends OCSController {
 	 * @throws OCSForbiddenException
 	 */
 	public function index(): DataResponse {
-		return new DataResponse([]);
+		$user = $this->userSession->getUser();
+		if (!$user instanceof IUser) {
+			throw new OCSForbiddenException('Not logged in');
+		}
+
+		$lines = $this->editorMapper->findLinesForEditor($user->getUID());
+		return new DataResponse(array_map(function(Line $line) {
+			return [
+				'id' => $line->getId(),
+				'name' => $line->getName(),
+			];
+		}, $lines));
 	}
 
 	/**
@@ -53,50 +86,116 @@ class LinesController extends OCSController {
 	 * @param int $id
 	 * @return DataResponse
 	 * @throws OCSForbiddenException
+	 * @throws OCSNotFoundException
 	 */
 	public function show(int $id): DataResponse {
-		return new DataResponse([]);
+		$user = $this->userSession->getUser();
+		if (!$user instanceof IUser) {
+			throw new OCSForbiddenException('Not logged in');
+		}
+
+		try {
+			$this->editorMapper->findEditorForLine($id, $user->getUID());
+		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
+			throw new OCSNotFoundException('', $e);
+		}
+
+		try {
+			$line = $this->lineMapper->findById($id);
+
+			$editors = $this->editorMapper->findEditorsForLine($line->getId());
+			$editorUserIds = array_map(function(Editor $editor) {
+				return $editor->getUserId();
+			}, $editors);
+
+			return new DataResponse([
+				'id' => $line->getId(),
+				'name' => $line->getName(),
+				'editors' => $editorUserIds,
+			]);
+		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
+			throw new OCSNotFoundException('', $e);
+		}
 	}
 
 	/**
 	 * @NoAdminRequired
+	 * @param string $name
 	 * @return DataResponse
 	 * @throws OCSBadRequestException
 	 * @throws OCSForbiddenException
-	 * @throws OCSException
 	 */
 	public function create(
+		string $name
 	): DataResponse {
-		try {
-			return new DataResponse([]);
-		} catch (\UnexpectedValueException $e) {
-			throw new OCSBadRequestException($e->getMessage(), $e);
-		} catch (\DomainException $e) {
-			throw new OCSForbiddenException($e->getMessage(), $e);
-		} catch (\Exception $e) {
-			throw new OCSException('An internal error occurred', $e->getCode(), $e);
+		$user = $this->userSession->getUser();
+		if (!$user instanceof IUser) {
+			throw new OCSForbiddenException('Not logged in');
 		}
+
+		$name = trim($name);
+		if ($name === '') {
+			throw new OCSBadRequestException('name');
+		}
+
+		$line = new Line();
+		$line->setName($name);
+		$this->lineMapper->insert($line);
+
+		$editor = new Editor();
+		$editor->setLineId($line->getId());
+		$editor->setUserId($user->getUID());
+		$this->editorMapper->insert($editor);
+
+		return new DataResponse([
+			'id' => $line->getId(),
+			'name' => $line->getName(),
+		]);
 	}
 
 	/**
 	 * @NoAdminRequired
 	 * @param int $id
+	 * @param string $name
 	 * @return DataResponse
 	 * @throws OCSBadRequestException
 	 * @throws OCSForbiddenException
-	 * @throws OCSException
+	 * @throws OCSNotFoundException
 	 */
 	public function update(
-		int $id
+		int $id,
+		string $name
 	): DataResponse {
+		$user = $this->userSession->getUser();
+		if (!$user instanceof IUser) {
+			throw new OCSForbiddenException('Not logged in');
+		}
+
 		try {
-			return new DataResponse([]);
-		} catch (\UnexpectedValueException $e) {
-			throw new OCSBadRequestException($e->getMessage(), $e);
-		} catch (\DomainException $e) {
-			throw new OCSForbiddenException($e->getMessage(), $e);
-		} catch (\Exception $e) {
-			throw new OCSException('An internal error occurred', $e->getCode(), $e);
+			$this->editorMapper->findEditorForLine($id, $user->getUID());
+		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
+			throw new OCSNotFoundException('', $e);
+		}
+
+		$name = trim($name);
+		if ($name === '') {
+			throw new OCSBadRequestException('name');
+		}
+
+		try {
+			$line = $this->lineMapper->findById($id);
+
+			if ($name !== $line->getName()) {
+				$line->setName($name);
+				$this->lineMapper->update($line);
+			}
+
+			return new DataResponse([
+				'id' => $line->getId(),
+				'name' => $line->getName(),
+			]);
+		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
+			throw new OCSNotFoundException('', $e);
 		}
 	}
 
@@ -104,19 +203,33 @@ class LinesController extends OCSController {
 	 * @NoAdminRequired
 	 * @param int $id
 	 * @return DataResponse
-	 * @throws OCSBadRequestException
 	 * @throws OCSForbiddenException
-	 * @throws OCSException
+	 * @throws OCSNotFoundException
 	 */
 	public function destroy(int $id): DataResponse {
+		$user = $this->userSession->getUser();
+		if (!$user instanceof IUser) {
+			throw new OCSForbiddenException('Not logged in');
+		}
+
 		try {
-			return new DataResponse([]);
-		} catch (\UnexpectedValueException $e) {
-			throw new OCSBadRequestException($e->getMessage(), $e);
-		} catch (\DomainException $e) {
-			throw new OCSForbiddenException($e->getMessage(), $e);
-		} catch (\Exception $e) {
-			throw new OCSException('An internal error occurred', $e->getCode(), $e);
+			$this->editorMapper->findEditorForLine($id, $user->getUID());
+		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
+			throw new OCSNotFoundException('', $e);
+		}
+
+		try {
+			$line = $this->lineMapper->findById($id);
+			$this->lineMapper->delete($line);
+
+			$this->editorMapper->deleteByLineId($id);
+
+			return new DataResponse([
+				'id' => $line->getId(),
+				'name' => $line->getName(),
+			]);
+		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
+			throw new OCSNotFoundException('', $e);
 		}
 	}
 }
