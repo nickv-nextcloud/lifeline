@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2021, Joas Schilling <coding@schilljs.com>
  *
@@ -23,25 +21,8 @@ declare(strict_types=1);
  *
  */
 
-namespace OCA\LifeLine\Model;
-
-use OCP\AppFramework\Db\Entity;
-
-/**
- * @method void setLineId(int $lineId)
- * @method int getLineId()
- * @method void setUserId(string $userId)
- * @method string getUserId()
- */
-class Editor extends Entity {
-
-	/** @var int */
-	protected $lineId;
-	/** @var string */
-	protected $userId;
-
-	public function __construct() {
-		$this->addType('lineId', 'integer');
-		$this->addType('userId', 'string');
-	}
-}
+return [
+	'ocs' => [
+		['name' => 'Endpoint#deleteAll', 'url' => '', 'verb' => 'DELETE'],
+	],
+];

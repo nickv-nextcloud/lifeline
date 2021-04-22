@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+	<id>lifelineintegrationtesting</id>
+	<name>LifeLine Integration Testing</name>
+	<summary><![CDATA[1]]></summary>
+	<description><![CDATA[2]]></description>
+
+	<version>1.0.0</version>
+	<licence>agpl</licence>
+	<author>Joas Schilling</author>
+	<namespace>LifeLineIntegrationTesting</namespace>
+
+	<types>
+		<logging/>
+	</types>
+
+	<category>tools</category>
+
+	<website>https://github.com/nextcloud/lifeline</website>
+	<bugs>https://github.com/nextcloud/lifeline/issues</bugs>
+	<repository>https://github.com/nextcloud/lifeline.git</repository>
+
+	<dependencies>
+		<nextcloud min-version="22" max-version="22" />
+	</dependencies>
+</info>

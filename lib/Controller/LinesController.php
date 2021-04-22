@@ -72,8 +72,14 @@ class LinesController extends OCSController {
 			throw new OCSForbiddenException('Not logged in');
 		}
 
-		$lines = $this->editorMapper->findLinesForEditor($user->getUID());
-		return new DataResponse(array_map(function(Line $line) {
+		$editors = $this->editorMapper->findLinesForEditor($user->getUID());
+
+		$lines = [];
+		foreach ($editors as $editor) {
+			$lines[] = $this->lineMapper->findById($editor->getLineId());
+		}
+
+		return new DataResponse(array_map(static function(Line $line) {
 			return [
 				'id' => $line->getId(),
 				'name' => $line->getName(),
@@ -104,7 +110,7 @@ class LinesController extends OCSController {
 			$line = $this->lineMapper->findById($id);
 
 			$editors = $this->editorMapper->findEditorsForLine($line->getId());
-			$editorUserIds = array_map(function(Editor $editor) {
+			$editorUserIds = array_map(static function(Editor $editor) {
 				return $editor->getUserId();
 			}, $editors);
 

@@ -5,7 +5,7 @@
 	<name>Life line</name>
 	<summary><![CDATA[Life line helps you to keep an overview over the most important moments of your beloved ones.]]></summary>
 	<description><![CDATA[Life line helps you to keep an overview over the most important moments of your beloved ones.]]></description>
-	<version>0.1.0</version>
+	<version>0.1.2</version>
 	<licence>agpl</licence>
 	<author>Joas Schilling</author>
 	<namespace>LifeLine</namespace>
