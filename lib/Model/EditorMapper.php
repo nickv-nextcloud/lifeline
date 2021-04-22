@@ -36,7 +36,6 @@ use OCP\IDBConnection;
  * @method Editor mapRowToEntity(array $row)
  */
 class EditorMapper extends QBMapper {
-
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'lifeline_editors', Editor::class);
 	}

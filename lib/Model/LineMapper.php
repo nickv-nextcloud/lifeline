@@ -36,7 +36,6 @@ use OCP\IDBConnection;
  * @method Line mapRowToEntity(array $row)
  */
 class LineMapper extends QBMapper {
-
 	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'lifeline_lines', Line::class);
 	}

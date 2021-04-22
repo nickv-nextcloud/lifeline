@@ -33,7 +33,6 @@ use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCS\OCSBadRequestException;
-use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCS\OCSForbiddenException;
 use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCSController;
@@ -79,7 +78,7 @@ class LinesController extends OCSController {
 			$lines[] = $this->lineMapper->findById($editor->getLineId());
 		}
 
-		return new DataResponse(array_map(static function(Line $line) {
+		return new DataResponse(array_map(static function (Line $line) {
 			return [
 				'id' => $line->getId(),
 				'name' => $line->getName(),
@@ -110,7 +109,7 @@ class LinesController extends OCSController {
 			$line = $this->lineMapper->findById($id);
 
 			$editors = $this->editorMapper->findEditorsForLine($line->getId());
-			$editorUserIds = array_map(static function(Editor $editor) {
+			$editorUserIds = array_map(static function (Editor $editor) {
 				return $editor->getUserId();
 			}, $editors);
 
