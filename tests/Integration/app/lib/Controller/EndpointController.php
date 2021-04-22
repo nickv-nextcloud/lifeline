@@ -23,25 +23,37 @@ declare(strict_types=1);
  *
  */
 
-namespace OCA\LifeLine\Model;
+namespace OCA\LifeLineIntegrationTesting\Controller;
 
-use OCP\AppFramework\Db\Entity;
+use OCP\AppFramework\OCSController;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\IDBConnection;
+use OCP\IRequest;
 
-/**
- * @method void setLineId(int $lineId)
- * @method int getLineId()
- * @method void setUserId(string $userId)
- * @method string getUserId()
- */
-class Editor extends Entity {
+class EndpointController extends OCSController {
 
-	/** @var int */
-	protected $lineId;
-	/** @var string */
-	protected $userId;
+	/** @var IDBConnection */
+	private $connection;
 
-	public function __construct() {
-		$this->addType('lineId', 'integer');
-		$this->addType('userId', 'string');
+	public function __construct(string $appName, IRequest $request, IDBConnection $connection) {
+		parent::__construct($appName, $request);
+		$this->connection = $connection;
+	}
+
+
+	/**
+	 * @NoCSRFRequired
+	 *
+	 * @return DataResponse
+	 */
+	public function deleteAll(): DataResponse {
+		$query = $this->connection->getQueryBuilder();
+		$query->delete('lifeline_lines');
+		$query->executeUpdate();
+
+		$query->delete('lifeline_editors');
+		$query->executeUpdate();
+
+		return new DataResponse();
 	}
 }
