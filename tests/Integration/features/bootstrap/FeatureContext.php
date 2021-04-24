@@ -40,9 +40,9 @@ use Psr\Http\Message\ResponseInterface;
 class FeatureContext implements Context, SnippetAcceptingContext {
 
 	/** @var array[] */
-	protected static $identifierToToken;
+	protected static $identifierToId = [];
 	/** @var array[] */
-	protected static $tokenToIdentifier;
+	protected static $idToIdentifier = [];
 
 	/** @var int */
 	protected $deletedNotification;
@@ -71,39 +71,47 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 	}
 
 	/**
-	 * @Given /^user "([^"]*)" creates line$/
+	 * @Given /^user "([^"]*)" creates line with (\d+)$/
 	 *
 	 * @param string $user
+	 * @param int $status
 	 * @param TableNode|null $formData
 	 */
-	public function createsLine(string $user, TableNode $formData): void {
+	public function createsLine(string $user, int $status, TableNode $formData): void {
 		$this->setCurrentUser($user);
 		$this->sendingToWith('POST', '/apps/lifeline/api/v1/lines', $formData);
-		$this->assertStatusCode($this->response, 200);
+		$this->assertStatusCode($this->response, $status);
+
+		$line = $this->getArrayOfDataResponded($this->response);
+
+		self::$identifierToId[$line['name']] = $line['id'];
+		self::$idToIdentifier[$line['id']] = $line['name'];
 	}
 
 	/**
-	 * @Given /^user "([^"]*)" updates line "([^"]*)"$/
+	 * @Given /^user "([^"]*)" updates line "([^"]*)" with (\d+)$/
 	 *
 	 * @param string $user
 	 * @param string $line
+	 * @param int $status
 	 */
-	public function updateLine(string $user, string $line, TableNode $formData): void {
+	public function updateLine(string $user, string $line, int $status, TableNode $formData): void {
 		$this->setCurrentUser($user);
-		$this->sendingToWith('PUT', '/apps/lifeline/api/v1/lines/' . self::$identifierToToken[$line], $formData);
-		$this->assertStatusCode($this->response, 200);
+		$this->sendingToWith('PUT', '/apps/lifeline/api/v1/lines/' . self::$identifierToId[$line], $formData);
+		$this->assertStatusCode($this->response, $status);
 	}
 
 	/**
-	 * @Given /^user "([^"]*)" deletes line "([^"]*)"$/
+	 * @Given /^user "([^"]*)" deletes line "([^"]*)" with (\d+)$/
 	 *
 	 * @param string $user
 	 * @param string $line
+	 * @param int $status
 	 */
-	public function deleteLine(string $user, string $line): void {
+	public function deleteLine(string $user, string $line, int $status): void {
 		$this->setCurrentUser($user);
-		$this->sendingToWith('DELETE', '/apps/lifeline/api/v1/lines/' . self::$identifierToToken[$line]);
-		$this->assertStatusCode($this->response, 200);
+		$this->sendingToWith('DELETE', '/apps/lifeline/api/v1/lines/' . self::$identifierToId[$line]);
+		$this->assertStatusCode($this->response, $status);
 	}
 
 	/**
@@ -117,18 +125,70 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 		$this->sendingToWith('GET', '/apps/lifeline/api/v1/lines', $formData);
 		$this->assertStatusCode($this->response, 200);
 
-		$lines = $this->getArrayOfLinesResponded($this->response);
+		$lines = $this->getArrayOfDataResponded($this->response);
 		$this->assertLines($formData, $lines);
+	}
+
+	/**
+	 * @Given /^user "([^"]*)" adds "([^"]*)" as editor to line "([^"]*)" with (\d+)$/
+	 *
+	 * @param string $user
+	 * @param string $editor
+	 * @param string $line
+	 * @param int $status
+	 */
+	public function addsEditor(string $user, string $editor, string $line, int $status): void {
+		$formData = new TableNode([
+			['id', $editor],
+		]);
+
+		$this->setCurrentUser($user);
+		$this->sendingToWith('POST', '/apps/lifeline/api/v1/lines/' . self::$identifierToId[$line] . '/editors', $formData);
+		$this->assertStatusCode($this->response, $status);
+	}
+
+	/**
+	 * @Given /^user "([^"]*)" removes "([^"]*)" as editor from line "([^"]*)" with (\d+)$/
+	 *
+	 * @param string $user
+	 * @param string $line
+	 * @param int $status
+	 */
+	public function removesEditor(string $user, string $editor, string $line, int $status): void {
+		$this->setCurrentUser($user);
+		$this->sendingToWith('DELETE', '/apps/lifeline/api/v1/lines/' . self::$identifierToId[$line] . '/editors/' . $editor);
+		$this->assertStatusCode($this->response, $status);
+	}
+
+	/**
+	 * @Then /^user "([^"]*)" sees line "([^"]*)" has editors with (\d+)$/
+	 *
+	 * @param string $user
+	 * @param string $line
+	 * @param int $status
+	 * @param TableNode|null $formData
+	 */
+	public function seesEditors(string $user, string $line, int $status, TableNode $formData) {
+		$this->setCurrentUser($user);
+		$this->sendingToWith('GET', '/apps/lifeline/api/v1/lines/' . self::$identifierToId[$line] . '/editors', $formData);
+		$this->assertStatusCode($this->response, $status);
+
+		if ($status === 200) {
+			$editors = $this->getArrayOfDataResponded($this->response);
+			$this->assertEditors($formData, $editors);
+		} else {
+			Assert::assertEmpty($this->getArrayOfDataResponded($this->response));
+		}
 	}
 
 	protected function assertLines(TableNode $formData, array $actual) {
 		Assert::assertCount(count($formData->getHash()), $actual, 'Lines count does not match');
 		Assert::assertEquals($formData->getHash(), array_map(function ($line, $expectedLine) {
 			if (!isset(self::$identifierToId[$line['name']])) {
-				self::$identifierToToken[$line['name']] = $line['id'];
+				self::$identifierToId[$line['name']] = $line['id'];
 			}
-			if (!isset(self::$tokenToIdentifier[$line['id']])) {
-				self::$tokenToIdentifier[$line['id']] = $line['name'];
+			if (!isset(self::$idToIdentifier[$line['id']])) {
+				self::$idToIdentifier[$line['id']] = $line['name'];
 			}
 
 			$data = [];
@@ -140,12 +200,24 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 		}, $actual, $formData->getHash()));
 	}
 
+	protected function assertEditors(TableNode $formData, array $actual) {
+		Assert::assertCount(count($formData->getHash()), $actual, 'Editors count does not match');
+		Assert::assertEquals($formData->getHash(), array_map(function ($editor, $expectedEditor) {
+			$data = [];
+			if (isset($expectedEditor['user_id'])) {
+				$data['user_id'] = $editor['user_id'];
+			}
+
+			return $data;
+		}, $actual, $formData->getHash()));
+	}
+
 	/**
 	 * Parses the JSON answer to get the array of users returned.
 	 * @param ResponseInterface $response
 	 * @return array
 	 */
-	protected function getArrayOfLinesResponded(ResponseInterface $response): array {
+	protected function getArrayOfDataResponded(ResponseInterface $response): array {
 		$jsonBody = json_decode($response->getBody()->getContents(), true);
 		return $jsonBody['ocs']['data'];
 	}

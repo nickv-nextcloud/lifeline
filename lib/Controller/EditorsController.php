@@ -80,15 +80,20 @@ class EditorsController extends OCSController {
 		}
 
 		$editors = $this->editorMapper->findEditorsForLine($lineId);
-		$editorUserIds = array_map(static function (Editor $editor) {
-			return $editor->getUserId();
-		}, $editors);
+		$userEditor = array_filter($editors, static function (Editor $editor) use ($user) {
+			return $user->getUID() === $editor->getUserId();
+		});
 
-		if (!in_array($user->getUID(), $editorUserIds, true)) {
+		if (empty($userEditor)) {
 			throw new OCSNotFoundException();
 		}
 
-		return new DataResponse($editorUserIds);
+		return new DataResponse(array_map(static function (Editor $editor) {
+			return [
+				'line_id' => $editor->getLineId(),
+				'user_id' => $editor->getUserId(),
+			];
+		}, $editors));
 	}
 
 	/**

@@ -58,8 +58,7 @@ class Version1000Date20210422181351 extends SimpleMigrationStep {
 			]);
 
 			$table->setPrimaryKey(['id']);
-			$table->addIndex(['line_id'], 'oc_lifeline_editorline');
-			$table->addIndex(['user_id'], 'oc_lifeline_editoruser');
+			$table->addUniqueIndex(['line_id', 'user_id'], 'oc_lifeline_editors_uniq');
 		}
 
 		return $schema;
