@@ -81,7 +81,10 @@ class EditorsController extends OCSController {
 
 		$editors = $this->editorMapper->findEditorsForLine($lineId);
 		$editorUserIds = array_map(static function (Editor $editor) {
-			return $editor->getUserId();
+			return [
+				'line_id' => $editor->getLineId(),
+				'user_id' => $editor->getUserId(),
+			];
 		}, $editors);
 
 		if (!in_array($user->getUID(), $editorUserIds, true)) {
