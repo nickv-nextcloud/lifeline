@@ -40,9 +40,9 @@ use Psr\Http\Message\ResponseInterface;
 class FeatureContext implements Context, SnippetAcceptingContext {
 
 	/** @var array[] */
-	protected static $identifierToId;
+	protected static $identifierToId = [];
 	/** @var array[] */
-	protected static $idToIdentifier;
+	protected static $idToIdentifier = [];
 
 	/** @var int */
 	protected $deletedNotification;
@@ -81,6 +81,11 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 		$this->setCurrentUser($user);
 		$this->sendingToWith('POST', '/apps/lifeline/api/v1/lines', $formData);
 		$this->assertStatusCode($this->response, $status);
+
+		$line = $this->getArrayOfDataResponded($this->response);
+
+		self::$identifierToId[$line['name']] = $line['id'];
+		self::$idToIdentifier[$line['id']] = $line['name'];
 	}
 
 	/**
