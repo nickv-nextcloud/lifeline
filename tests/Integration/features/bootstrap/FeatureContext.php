@@ -138,8 +138,12 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 	 * @param int $status
 	 */
 	public function addsEditor(string $user, string $editor, string $line, int $status): void {
+		$formData = new TableNode([
+			['id', $editor],
+		]);
+
 		$this->setCurrentUser($user);
-		$this->sendingToWith('POST', '/apps/lifeline/api/v1/lines/' . self::$identifierToId[$line] . '/editors/' . $editor);
+		$this->sendingToWith('POST', '/apps/lifeline/api/v1/lines/' . self::$identifierToId[$line] . '/editors', $formData);
 		$this->assertStatusCode($this->response, $status);
 	}
 
@@ -166,7 +170,7 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 	 */
 	public function seesEditors(string $user, string $line, int $status, TableNode $formData) {
 		$this->setCurrentUser($user);
-		$this->sendingToWith('GET', '/apps/lifeline/api/v1/lines' . self::$identifierToId[$line] . '/editors', $formData);
+		$this->sendingToWith('GET', '/apps/lifeline/api/v1/lines/' . self::$identifierToId[$line] . '/editors', $formData);
 		$this->assertStatusCode($this->response, $status);
 
 		if ($status === 200) {
