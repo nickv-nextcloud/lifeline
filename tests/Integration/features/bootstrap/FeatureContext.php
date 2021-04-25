@@ -40,9 +40,13 @@ use Psr\Http\Message\ResponseInterface;
 class FeatureContext implements Context, SnippetAcceptingContext {
 
 	/** @var array[] */
-	protected static $identifierToId = [];
+	protected static $lineToId = [];
 	/** @var array[] */
-	protected static $idToIdentifier = [];
+	protected static $idToLine = [];
+	/** @var array[] */
+	protected static $pointToId = [];
+	/** @var array[] */
+	protected static $idToPoint = [];
 
 	/** @var int */
 	protected $deletedNotification;
@@ -84,8 +88,8 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 
 		$line = $this->getArrayOfDataResponded($this->response);
 
-		self::$identifierToId[$line['name']] = $line['id'];
-		self::$idToIdentifier[$line['id']] = $line['name'];
+		self::$lineToId[$line['name']] = $line['id'];
+		self::$idToLine[$line['id']] = $line['name'];
 	}
 
 	/**
@@ -97,7 +101,7 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 	 */
 	public function updateLine(string $user, string $line, int $status, TableNode $formData): void {
 		$this->setCurrentUser($user);
-		$this->sendingToWith('PUT', '/apps/lifeline/api/v1/lines/' . self::$identifierToId[$line], $formData);
+		$this->sendingToWith('PUT', '/apps/lifeline/api/v1/lines/' . self::$lineToId[$line], $formData);
 		$this->assertStatusCode($this->response, $status);
 	}
 
@@ -110,7 +114,7 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 	 */
 	public function deleteLine(string $user, string $line, int $status): void {
 		$this->setCurrentUser($user);
-		$this->sendingToWith('DELETE', '/apps/lifeline/api/v1/lines/' . self::$identifierToId[$line]);
+		$this->sendingToWith('DELETE', '/apps/lifeline/api/v1/lines/' . self::$lineToId[$line]);
 		$this->assertStatusCode($this->response, $status);
 	}
 
@@ -143,7 +147,7 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 		]);
 
 		$this->setCurrentUser($user);
-		$this->sendingToWith('POST', '/apps/lifeline/api/v1/lines/' . self::$identifierToId[$line] . '/editors', $formData);
+		$this->sendingToWith('POST', '/apps/lifeline/api/v1/lines/' . self::$lineToId[$line] . '/editors', $formData);
 		$this->assertStatusCode($this->response, $status);
 	}
 
@@ -156,7 +160,7 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 	 */
 	public function removesEditor(string $user, string $editor, string $line, int $status): void {
 		$this->setCurrentUser($user);
-		$this->sendingToWith('DELETE', '/apps/lifeline/api/v1/lines/' . self::$identifierToId[$line] . '/editors/' . $editor);
+		$this->sendingToWith('DELETE', '/apps/lifeline/api/v1/lines/' . self::$lineToId[$line] . '/editors/' . $editor);
 		$this->assertStatusCode($this->response, $status);
 	}
 
@@ -170,7 +174,7 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 	 */
 	public function seesEditors(string $user, string $line, int $status, TableNode $formData) {
 		$this->setCurrentUser($user);
-		$this->sendingToWith('GET', '/apps/lifeline/api/v1/lines/' . self::$identifierToId[$line] . '/editors', $formData);
+		$this->sendingToWith('GET', '/apps/lifeline/api/v1/lines/' . self::$lineToId[$line] . '/editors', $formData);
 		$this->assertStatusCode($this->response, $status);
 
 		if ($status === 200) {
@@ -181,14 +185,69 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 		}
 	}
 
+	/**
+	 * @Given /^user "([^"]*)" adds point to line "([^"]*)" with (\d+)$/
+	 *
+	 * @param string $user
+	 * @param string $line
+	 * @param int $status
+	 * @param TableNode|null $formData
+	 */
+	public function addsPoint(string $user, string $line, int $status, TableNode $formData): void {
+		$this->setCurrentUser($user);
+		$this->sendingToWith('POST', '/apps/lifeline/api/v1/lines/' . self::$lineToId[$line] . '/points', $formData);
+		$this->assertStatusCode($this->response, $status);
+
+		if ($status === 200) {
+			$point = $this->getArrayOfDataResponded($this->response);
+			self::$pointToId[$point['title']] = $point['id'];
+			self::$idToPoint[$point['id']] = $point['title'];
+		}
+	}
+
+	/**
+	 * @Given /^user "([^"]*)" removes point "([^"]*)" from line "([^"]*)" with (\d+)$/
+	 *
+	 * @param string $user
+	 * @param string $point
+	 * @param string $line
+	 * @param int $status
+	 */
+	public function removedPoint(string $user, string $point, string $line, int $status): void {
+		$this->setCurrentUser($user);
+		$this->sendingToWith('DELETE', '/apps/lifeline/api/v1/lines/' . self::$lineToId[$line] . '/points/' . self::$pointToId[$point]);
+		$this->assertStatusCode($this->response, $status);
+	}
+
+	/**
+	 * @Then /^user "([^"]*)" sees the following points on line "([^"]*)" with (\d+)$/
+	 *
+	 * @param string $user
+	 * @param string $line
+	 * @param int $status
+	 * @param TableNode|null $formData
+	 */
+	public function seesPoints(string $user, string $line, int $status, TableNode $formData) {
+		$this->setCurrentUser($user);
+		$this->sendingToWith('GET', '/apps/lifeline/api/v1/lines/' . self::$lineToId[$line] . '/points', $formData);
+		$this->assertStatusCode($this->response, $status);
+
+		if ($status === 200) {
+			$editors = $this->getArrayOfDataResponded($this->response);
+			$this->assertPoints($formData, $editors);
+		} else {
+			Assert::assertEmpty($this->getArrayOfDataResponded($this->response));
+		}
+	}
+
 	protected function assertLines(TableNode $formData, array $actual) {
 		Assert::assertCount(count($formData->getHash()), $actual, 'Lines count does not match');
 		Assert::assertEquals($formData->getHash(), array_map(function ($line, $expectedLine) {
-			if (!isset(self::$identifierToId[$line['name']])) {
-				self::$identifierToId[$line['name']] = $line['id'];
+			if (!isset(self::$lineToId[$line['name']])) {
+				self::$lineToId[$line['name']] = $line['id'];
 			}
-			if (!isset(self::$idToIdentifier[$line['id']])) {
-				self::$idToIdentifier[$line['id']] = $line['name'];
+			if (!isset(self::$idToLine[$line['id']])) {
+				self::$idToLine[$line['id']] = $line['name'];
 			}
 
 			$data = [];
@@ -206,6 +265,33 @@ class FeatureContext implements Context, SnippetAcceptingContext {
 			$data = [];
 			if (isset($expectedEditor['user_id'])) {
 				$data['user_id'] = $editor['user_id'];
+			}
+
+			return $data;
+		}, $actual, $formData->getHash()));
+	}
+
+	protected function assertPoints(TableNode $formData, array $actual) {
+		Assert::assertCount(count($formData->getHash()), $actual, 'Points count does not match');
+		Assert::assertEquals($formData->getHash(), array_map(function ($point, $expectedPoint) {
+			$data = [];
+			if (isset($expectedPoint['icon'])) {
+				$data['icon'] = $point['icon'];
+			}
+			if (isset($expectedPoint['title'])) {
+				$data['title'] = $point['title'];
+			}
+			if (isset($expectedPoint['description'])) {
+				$data['description'] = $point['description'];
+			}
+			if (isset($expectedPoint['highlight'])) {
+				$data['highlight'] = (int) $point['highlight'];
+			}
+			if (isset($expectedPoint['datetime'])) {
+				$data['datetime'] = $point['datetime'];
+			}
+			if (isset($expectedPoint['fileId'])) {
+				$data['fileId'] = $point['fileId'];
 			}
 
 			return $data;

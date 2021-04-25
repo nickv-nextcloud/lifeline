@@ -32,61 +32,52 @@ use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
 /**
- * @template-extends QBMapper<Editor>
- * @method Editor mapRowToEntity(array $row)
+ * @template-extends QBMapper<Point>
+ * @method Point mapRowToEntity(array $row)
  */
-class EditorMapper extends QBMapper {
+class PointMapper extends QBMapper {
 	public function __construct(IDBConnection $db) {
-		parent::__construct($db, 'lifeline_editors', Editor::class);
+		parent::__construct($db, 'lifeline_points', Point::class);
 	}
 
-	public function createEditorFromRow(array $row): Editor {
+	public function createEditorFromRow(array $row): Point {
 		return $this->mapRowToEntity([
 			'id' => (int) $row['id'],
 			'line_id' => (int) $row['line_id'],
-			'user_id' => $row['user_id'],
+			'icon' => $row['icon'],
+			'title' => $row['title'],
+			'description' => $row['description'] ?: '',
+			'highlight' => (bool) $row['highlight'],
+			'datetime' => new \DateTime($row['datetime']),
+			'file_id' => $row['file_id'] ? (int) $row['file_id'] : null,
 		]);
 	}
 
 	/**
-	 * @param int $lineId
-	 * @param string $userId
-	 * @return Editor
+	 * @param int $pointId
+	 * @return Point
 	 * @throws DoesNotExistException
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function findEditorForLine(int $lineId, string $userId): Editor {
+	public function findById(int $pointId): Point {
 		$query = $this->db->getQueryBuilder();
 		$query->select('*')
 			->from($this->getTableName())
-			->where($query->expr()->eq('line_id', $query->createNamedParameter($lineId), IQueryBuilder::PARAM_INT))
-			->andWhere($query->expr()->eq('user_id', $query->createNamedParameter($userId)));
+			->where($query->expr()->eq('id', $query->createNamedParameter($pointId), IQueryBuilder::PARAM_INT));
 
 		return $this->findEntity($query);
 	}
 
 	/**
 	 * @param int $lineId
-	 * @return Editor[]
+	 * @return Point[]
 	 */
-	public function findEditorsForLine(int $lineId): array {
+	public function findPointsForLine(int $lineId): array {
 		$query = $this->db->getQueryBuilder();
 		$query->select('*')
 			->from($this->getTableName())
-			->where($query->expr()->eq('line_id', $query->createNamedParameter($lineId), IQueryBuilder::PARAM_INT));
-
-		return $this->findEntities($query);
-	}
-
-	/**
-	 * @param string $userId
-	 * @return Editor[]
-	 */
-	public function findLinesForEditor(string $userId): array {
-		$query = $this->db->getQueryBuilder();
-		$query->select('*')
-			->from($this->getTableName())
-			->where($query->expr()->eq('user_id', $query->createNamedParameter($userId)));
+			->where($query->expr()->eq('line_id', $query->createNamedParameter($lineId), IQueryBuilder::PARAM_INT))
+			->orderBy('datetime', 'DESC');
 
 		return $this->findEntities($query);
 	}
