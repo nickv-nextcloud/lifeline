@@ -39,4 +39,11 @@ class Line extends Entity {
 	public function __construct() {
 		$this->addType('name', 'string');
 	}
+
+	public function toArray(): array {
+		return [
+			'id' => $this->getId(),
+			'name' => $this->getName(),
+		];
+	}
 }

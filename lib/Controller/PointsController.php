@@ -25,9 +25,10 @@ declare(strict_types=1);
 
 namespace OCA\LifeLine\Controller;
 
-use OCA\LifeLine\Model\Editor;
 use OCA\LifeLine\Model\EditorMapper;
 use OCA\LifeLine\Model\LineMapper;
+use OCA\LifeLine\Model\Point;
+use OCA\LifeLine\Model\PointMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Http\DataResponse;
@@ -40,12 +41,14 @@ use OCP\IUser;
 use OCP\IUserManager;
 use OCP\IUserSession;
 
-class EditorsController extends OCSController {
+class PointsController extends OCSController {
 
 	/** @var LineMapper */
 	protected $lineMapper;
 	/** @var EditorMapper */
 	protected $editorMapper;
+	/** @var PointMapper */
+	protected $pointMapper;
 	/** @var IUserManager */
 	protected $userManager;
 	/** @var IUserSession */
@@ -55,11 +58,13 @@ class EditorsController extends OCSController {
 								IRequest $request,
 								LineMapper $lineMapper,
 								EditorMapper $editorMapper,
+								PointMapper $pointMapper,
 								IUserManager $userManager,
 								IUserSession $userSession) {
 		parent::__construct($appName, $request);
 		$this->lineMapper = $lineMapper;
 		$this->editorMapper = $editorMapper;
+		$this->pointMapper = $pointMapper;
 		$this->userManager = $userManager;
 		$this->userSession = $userSession;
 	}
@@ -79,30 +84,28 @@ class EditorsController extends OCSController {
 			throw new OCSForbiddenException('Not logged in');
 		}
 
-		$editors = $this->editorMapper->findEditorsForLine($lineId);
-		$userEditor = array_filter($editors, static function (Editor $editor) use ($user) {
-			return $user->getUID() === $editor->getUserId();
-		});
-
-		if (empty($userEditor)) {
-			throw new OCSNotFoundException();
+		try {
+			$this->editorMapper->findEditorForLine($lineId, $user->getUID());
+		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
+			throw new OCSNotFoundException('', $e);
 		}
 
-		return new DataResponse(array_map(static function (Editor $editor) {
-			return $editor->toArray();
-		}, $editors));
+		$points = $this->pointMapper->findPointsForLine($lineId);
+		return new DataResponse(array_map(static function (Point $point) {
+			return $point->toArray();
+		}, $points));
 	}
 
 	/**
 	 * @NoAdminRequired
 	 * @param int $lineId
-	 * @param string $id
+	 * @param int $id
 	 * @return DataResponse
 	 * @throws OCSBadRequestException
 	 */
 	public function show(
 		int $lineId,
-		string $id
+		int $id
 	): DataResponse {
 		throw new OCSBadRequestException('Not implemented');
 	}
@@ -110,14 +113,24 @@ class EditorsController extends OCSController {
 	/**
 	 * @NoAdminRequired
 	 * @param int $lineId
-	 * @param string $id
+	 * @param string $icon
+	 * @param string $title
+	 * @param string|null $description
+	 * @param bool $highlight
+	 * @param string $datetime
+	 * @param int|null $fileId
 	 * @return DataResponse
 	 * @throws OCSForbiddenException
 	 * @throws OCSNotFoundException
 	 */
 	public function create(
 		int $lineId,
-		string $id
+		string $icon,
+		string $title,
+		?string $description,
+		bool $highlight,
+		string $datetime,
+		?int $fileId
 	): DataResponse {
 		$user = $this->userSession->getUser();
 		if (!$user instanceof IUser) {
@@ -130,32 +143,29 @@ class EditorsController extends OCSController {
 			throw new OCSNotFoundException('', $e);
 		}
 
-		$newUser = $this->userManager->get($id);
-		if (!$newUser instanceof IUser) {
-			throw new OCSNotFoundException('user');
-		}
+		$point = new Point();
+		$point->setLineId($lineId);
+		$point->setIcon($icon);
+		$point->setTitle($title);
+		$point->setDescription($description ?? '');
+		$point->setHighlight($highlight);
+		$point->setDatetime($datetime);
+		$point->setFileId($fileId);
+		$this->pointMapper->insert($point);
 
-		try {
-			$editor = $this->editorMapper->findEditorForLine($lineId, $newUser->getUID());
-		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
-			$editor = new Editor();
-			$editor->setLineId($lineId);
-			$editor->setUserId($newUser->getUID());
-			$this->editorMapper->insert($editor);
-		}
-		return new DataResponse($editor->toArray());
+		return new DataResponse($point->toArray());
 	}
 
 	/**
 	 * @NoAdminRequired
 	 * @param int $lineId
-	 * @param string $id
+	 * @param int $id
 	 * @return DataResponse
 	 * @throws OCSBadRequestException
 	 */
 	public function update(
 		int $lineId,
-		string $id
+		int $id
 	): DataResponse {
 		throw new OCSBadRequestException('Not implemented');
 	}
@@ -163,23 +173,27 @@ class EditorsController extends OCSController {
 	/**
 	 * @NoAdminRequired
 	 * @param int $lineId
-	 * @param string $id
+	 * @param int $id
 	 * @return DataResponse
 	 * @throws OCSForbiddenException
-	 * @throws OCSBadRequestException
 	 * @throws OCSNotFoundException
 	 */
 	public function destroy(
 		int $lineId,
-		string $id
+		int $id
 	): DataResponse {
 		$user = $this->userSession->getUser();
 		if (!$user instanceof IUser) {
 			throw new OCSForbiddenException('Not logged in');
 		}
 
-		if ($user->getUID() === $id) {
-			throw new OCSBadRequestException('self');
+		try {
+			$point = $this->pointMapper->findById($id);
+			if ($lineId !== $point->getLineId()) {
+				throw new OCSNotFoundException();
+			}
+		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
+			throw new OCSNotFoundException();
 		}
 
 		try {
@@ -188,11 +202,7 @@ class EditorsController extends OCSController {
 			throw new OCSNotFoundException();
 		}
 
-		try {
-			$editor = $this->editorMapper->findEditorForLine($lineId, $id);
-			$this->editorMapper->delete($editor);
-		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
-		}
+		$this->pointMapper->delete($point);
 
 		return new DataResponse();
 	}

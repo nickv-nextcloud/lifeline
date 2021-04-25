@@ -31,5 +31,6 @@ return [
 	'ocs-resources' => [
 		'lines' => ['url' => '/api/v1/lines'],
 		'editors' => ['url' => '/api/v1/lines/{lineId}/editors'],
+		'points' => ['url' => '/api/v1/lines/{lineId}/points'],
 	],
 ];

@@ -54,6 +54,9 @@ class EndpointController extends OCSController {
 		$query->delete('lifeline_editors');
 		$query->executeUpdate();
 
+		$query->delete('lifeline_points');
+		$query->executeUpdate();
+
 		return new DataResponse();
 	}
 }
