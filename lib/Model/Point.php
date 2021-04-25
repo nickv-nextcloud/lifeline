@@ -38,7 +38,7 @@ use OCP\AppFramework\Db\Entity;
  * @method string|null getDescription()
  * @method void setHighlight(bool $highlight)
  * @method bool isHighlight()
- * @method void setDatetime(\DateTime $datetime)
+ * @method void setDatetime(string $datetime)
  * @method \DateTime getDatetime()
  * @method void setFileId(?int $fileId)
  * @method int|null getFileId()
