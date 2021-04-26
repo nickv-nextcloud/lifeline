@@ -25,7 +25,7 @@
 	<navigations>
 		<navigation>
 			<name>Life line</name>
-			<route>lifeline.page.index</route>
+			<route>lifeline.frontend.index</route>
 			<order>80</order>
 		</navigation>
 	</navigations>
