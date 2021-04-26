@@ -26,9 +26,23 @@
 			<template #list>
 				<AppNavigationNewItem
 					:title="t('lifeline', 'Create new line')"
-					@new-item="function(value){alert(value)}" />
+					@new-item="createLine">
+					<Plus
+						slot="icon"
+						:size="16"
+						title=""
+						decorative />
+				</AppNavigationNewItem>
 				<AppNavigationItem
-					:title="t('lifeline', 'Line1')" />
+					v-for="line in lines"
+					:key="line.id"
+					:title="line.name">
+					<AccountDetails
+						slot="icon"
+						:size="16"
+						title=""
+						decorative />
+				</AppNavigationItem>
 			</template>
 		</AppNavigation>
 		<AppContent>
@@ -43,16 +57,21 @@ import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
 import Content from '@nextcloud/vue/dist/Components/Content'
+import AccountDetails from 'vue-material-design-icons/AccountDetails'
+import Plus from 'vue-material-design-icons/Plus'
+import { showError } from '@nextcloud/dialogs'
 
 export default {
 	name: 'App',
 
 	components: {
+		AccountDetails,
 		AppContent,
 		AppNavigation,
 		AppNavigationItem,
 		AppNavigationNewItem,
 		Content,
+		Plus,
 	},
 
 	data() {
@@ -61,12 +80,32 @@ export default {
 	},
 
 	computed: {
+		lines() {
+			return this.$store.getters.getLines()
+		},
 	},
 
 	mounted() {
+		this.loadLines()
 	},
 
 	methods: {
+		loadLines() {
+			try {
+				this.$store.dispatch('getLines')
+			} catch (e) {
+				console.error(e)
+				showError(t('lifeline', 'An error occurred while loading the lines'))
+			}
+		},
+		createLine(name) {
+			try {
+				this.$store.dispatch('createLine', name)
+			} catch (e) {
+				console.error(e)
+				showError(t('lifeline', 'An error occurred while creating the line'))
+			}
+		},
 	},
 }
 </script>
