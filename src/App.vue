@@ -25,7 +25,7 @@
 		<AppNavigation :aria-label="t('lifeline', 'Life lines')">
 			<template #list>
 				<AppNavigationNewItem
-					:title="t('lifeline', 'Create new line')"
+					:title="t('lifeline', 'New life line')"
 					@new-item="createLine">
 					<Plus
 						slot="icon"
@@ -36,7 +36,8 @@
 				<AppNavigationItem
 					v-for="line in lines"
 					:key="line.id"
-					:title="line.name">
+					:title="line.name"
+					:to="routeTo(line)">
 					<AccountDetails
 						slot="icon"
 						:size="16"
@@ -46,7 +47,7 @@
 			</template>
 		</AppNavigation>
 		<AppContent>
-			<h2>{{ t('lifeline', 'Life line') }}</h2>
+			<router-view />
 		</AppContent>
 	</Content>
 </template>
@@ -90,6 +91,13 @@ export default {
 	},
 
 	methods: {
+		routeTo(line) {
+			return {
+				name: 'line',
+				params: { id: line.id },
+			}
+		},
+
 		loadLines() {
 			try {
 				this.$store.dispatch('getLines')

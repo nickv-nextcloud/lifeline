@@ -25,6 +25,10 @@ import App from './App.vue'
 import Vuex from 'vuex'
 import store from './store'
 
+// Router
+import VueRouter from 'vue-router'
+import router from './router'
+
 // Utils
 import { generateFilePath } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
@@ -52,11 +56,11 @@ Vue.prototype.OC = OC
 Vue.prototype.OCA = OCA
 
 Vue.use(Vuex)
-// Vue.use(VueRouter)
+Vue.use(VueRouter)
 
 export const app = new Vue({
 	el: '#content',
 	store,
-	// router,
+	router,
 	render: h => h(App),
 })
