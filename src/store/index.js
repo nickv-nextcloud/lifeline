@@ -23,6 +23,7 @@
 import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
 import linesStore from './linesStore'
+import pointsStore from './pointsStore'
 
 Vue.use(Vuex)
 
@@ -31,6 +32,7 @@ const mutations = {}
 export default new Store({
 	modules: {
 		linesStore,
+		pointsStore,
 	},
 
 	mutations,

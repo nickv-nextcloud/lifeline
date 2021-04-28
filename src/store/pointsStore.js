@@ -19,18 +19,21 @@
  */
 
 import {
-	createLine,
-	getLines,
-} from '../services/linesService'
+	createPoint,
+	getPoints,
+} from '../services/pointsService'
 import Vue from 'vue'
 
 const state = {
-	lines: {},
+	points: {},
 }
 
 const getters = {
-	getLines: (state) => () => {
-		return state.lines
+	getPoints: (state) => (lineId) => {
+		if (state.points[lineId]) {
+			return state.points[lineId]
+		}
+		return state.points
 	},
 }
 
@@ -39,31 +42,28 @@ const mutations = {
 	 * Add a line to the store
 	 *
 	 * @param {object} state current store state;
-	 * @param {object} line The line to be added to the store
+	 * @param {object} point The point to be added to the store
 	 */
-	addLine(state, line) {
-		Vue.set(state.lines, line.id, line)
+	addPoint(state, point) {
+		if (!state.points[point.line_id]) {
+			Vue.set(state.points, point.line_id, {})
+		}
+		Vue.set(state.points[point.line_id], point.id, point)
 	},
 }
 
 const actions = {
-	/**
-	 * Create a new life line
-	 *
-	 * @param {object} context default store context;
-	 * @param {string} name The name of the new line
-	 */
-	async createLine(context, name) {
-		const response = await createLine(name)
-		context.commit('addLine', response.data.ocs.data)
+	async getPoints(context, { lineId }) {
+		const response = await getPoints(lineId)
+
+		response.data.ocs.data.forEach((point) => {
+			context.commit('addPoint', point)
+		})
 	},
 
-	async getLines(context) {
-		const response = await getLines()
-
-		response.data.ocs.data.forEach((line) => {
-			context.commit('addLine', line)
-		})
+	async createPoint(context, { lineId, point }) {
+		const response = await createPoint(lineId, point)
+		context.commit('addPoint', response.data.ocs.data)
 	},
 }
 

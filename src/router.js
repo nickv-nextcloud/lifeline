@@ -52,7 +52,7 @@ export default new Router({
 			props: {
 				default: (route) => {
 					return {
-						id: parseInt(route.params.id, 10),
+						lineId: parseInt(route.params.id, 10),
 					}
 				},
 			},
