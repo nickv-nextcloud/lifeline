@@ -21,7 +21,7 @@ jobs:
         databases: ['sqlite']
         server-versions: ['master']
 
-    name: integration-php${{ matrix.php-versions }}-${{ matrix.databases }}
+    name: integration-php${{ matrix.php-versions }}-${{ matrix.databases }}-${{ matrix.server-versions }}
 
     steps:
       - name: Checkout server
@@ -78,7 +78,7 @@ jobs:
         databases: ['mysql']
         server-versions: ['master']
 
-    name: integration-php${{ matrix.php-versions }}-${{ matrix.databases }}
+    name: integration-php${{ matrix.php-versions }}-${{ matrix.databases }}-${{ matrix.server-versions }}
 
     services:
       mysql:
@@ -144,7 +144,7 @@ jobs:
         databases: ['pgsql']
         server-versions: ['master']
 
-    name: integration-php${{ matrix.php-versions }}-${{ matrix.databases }}
+    name: integration-php${{ matrix.php-versions }}-${{ matrix.databases }}-${{ matrix.server-versions }}
 
     services:
       postgres:
