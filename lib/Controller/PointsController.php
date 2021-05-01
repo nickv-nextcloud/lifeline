@@ -143,13 +143,16 @@ class PointsController extends OCSController {
 			throw new OCSNotFoundException('', $e);
 		}
 
+		$date = new \DateTime($datetime);
+		$date->setTimeZone(new \DateTimeZone('UTC'));
+
 		$point = new Point();
 		$point->setLineId($lineId);
 		$point->setIcon($icon);
 		$point->setTitle($title);
 		$point->setDescription($description ?? '');
 		$point->setHighlight($highlight);
-		$point->setDatetime($datetime);
+		$point->setDatetime($date);
 		$point->setFileId($fileId);
 		$this->pointMapper->insert($point);
 
