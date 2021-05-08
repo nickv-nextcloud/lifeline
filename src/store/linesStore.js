@@ -32,6 +32,12 @@ const getters = {
 	getLines: (state) => () => {
 		return state.lines
 	},
+	getLine: (state) => (id) => {
+		if (state.lines[id]) {
+			return state.lines[id]
+		}
+		return null
+	},
 }
 
 const mutations = {

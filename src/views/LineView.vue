@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<h2>Line</h2>
+		<h2>{{ line.name }}</h2>
 
 		<div
 			v-for="point in points"
@@ -10,7 +10,7 @@
 				:size="16"
 				title=""
 				decorative />
-			{{ point.title }}
+			{{ point.title }} - {{ point.datetime }}
 		</div>
 	</div>
 </template>
@@ -33,6 +33,9 @@ export default {
 	},
 
 	computed: {
+		line() {
+			return this.$store.getters.getLine(this.lineId)
+		},
 		points() {
 			const r = this.$store.getters.getPoints(this.lineId)
 			console.error(r)
@@ -42,7 +45,7 @@ export default {
 
 	mounted() {
 		this.$store.dispatch('getPoints', { lineId: this.lineId })
-		const rand = (new Date()).UTC
+		const rand = Date.now()
 		this.$store.dispatch('createPoint', {
 			lineId: this.lineId,
 			point: {
