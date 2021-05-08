@@ -38,7 +38,7 @@ use OCP\AppFramework\Db\Entity;
  * @method string|null getDescription()
  * @method void setHighlight(bool $highlight)
  * @method bool isHighlight()
- * @method void setDatetime(string $datetime)
+ * @method void setDatetime(\DateTime $datetime)
  * @method \DateTime getDatetime()
  * @method void setFileId(?int $fileId)
  * @method int|null getFileId()
@@ -66,7 +66,7 @@ class Point extends Entity {
 		$this->addType('title', 'string');
 		$this->addType('description', 'string');
 		$this->addType('highlight', 'bool');
-//		$this->addType('datetime', 'datetime');
+		$this->addType('datetime', 'datetime');
 		$this->addType('fileId', 'integer');
 	}
 
@@ -78,7 +78,7 @@ class Point extends Entity {
 			'title' => $this->getTitle(),
 			'description' => $this->getDescription(),
 			'highlight' => $this->isHighlight(),
-			'datetime' => $this->getDatetime(),
+			'datetime' => $this->getDatetime()->format(\DateTime::ATOM),
 			'fileId' => $this->getFileId(),
 		];
 	}
