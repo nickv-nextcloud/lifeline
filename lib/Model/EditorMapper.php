@@ -95,6 +95,6 @@ class EditorMapper extends QBMapper {
 		$query = $this->db->getQueryBuilder();
 		$query->delete($this->getTableName())
 			->where($query->expr()->eq('line_id', $query->createNamedParameter($lineId), IQueryBuilder::PARAM_INT));
-		$query->executeUpdate();
+		$query->executeStatement();
 	}
 }
