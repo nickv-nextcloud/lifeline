@@ -2,6 +2,23 @@
 	<div>
 		<h2>{{ line.name }}</h2>
 
+		<div>
+			<button
+				class="primary"
+				@click="showModal">
+				<Plus
+					:size="16"
+					title=""
+					decorative />
+				{{ t('lifeline', 'Create new point') }}
+			</button>
+			<Modal
+				v-if="modal"
+				@close="closeModal">
+				<CreationModal />
+			</Modal>
+		</div>
+
 		<div
 			v-for="point in points"
 			:key="point.id">
@@ -16,13 +33,19 @@
 </template>
 
 <script>
+import CreationModal from '../components/CreationModal'
+import Modal from '@nextcloud/vue/dist/Components/Modal'
 import AccountDetails from 'vue-material-design-icons/AccountDetails'
+import Plus from 'vue-material-design-icons/Plus'
 
 export default {
 	name: 'LineView',
 
 	components: {
 		AccountDetails,
+		CreationModal,
+		Modal,
+		Plus,
 	},
 
 	props: {
@@ -30,6 +53,12 @@ export default {
 			type: Number,
 			required: true,
 		},
+	},
+
+	data() {
+		return {
+			modal: false,
+		}
 	},
 
 	computed: {
@@ -57,6 +86,15 @@ export default {
 				fileId: null,
 			},
 		})
+	},
+
+	methods: {
+		showModal() {
+			this.modal = true
+		},
+		closeModal() {
+			this.modal = false
+		}
 	},
 }
 </script>
