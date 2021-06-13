@@ -10,7 +10,9 @@
 				decorative />
 		</template>
 
-		<template #desc>{{ t('lifeline', 'Or edit an existing one') }}</template>
+		<template #desc>
+			{{ t('lifeline', 'Or edit an existing one') }}
+		</template>
 	</EmptyContent>
 </template>
 

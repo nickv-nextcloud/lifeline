@@ -8,7 +8,7 @@
 				id="icon"
 				v-model="icon"
 				type="text"
-				placeholder="Multiselect"/>
+				placeholder="Multiselect">
 		</p>
 
 		<p>
@@ -16,7 +16,7 @@
 			<input
 				id="title"
 				v-model="title"
-				type="text" />
+				type="text">
 		</p>
 
 		<p>
@@ -26,16 +26,16 @@
 				:auto-complete="() => {}"
 				:maxlength="400"
 				:multiline="true"
-				placeholder="Try mentioning the user Test01"/>
+				placeholder="Try mentioning the user Test01" />
 		</p>
 
 		<p>
 			<label for="date">{{ t('lifeline', 'Date') }}</label>
 			<DatetimePicker
-				:inputAttr="{
+				v-model="date"
+				:input-attr="{
 					id: 'date'
 				}"
-				v-model="date"
 				type="date" />
 		</p>
 	</div>
