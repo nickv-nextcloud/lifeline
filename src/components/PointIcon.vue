@@ -1,20 +1,46 @@
 <template>
-	<template
-		v-if="icon === 'AccountDetails'">
-		<AccountDetails
-			slot="icon"
-			:size="16"
-			title=""
-			decorative />
-	</template>
-	<template
-		v-else-if="icon === 'AccountDetails'">
-		<AccountDetails
-			slot="icon"
-			:size="16"
-			title=""
-			decorative />
-	</template>
+	<Account
+		v-if="icon === 'Account'"
+		slot="icon"
+		:size="16"
+		title=""
+		decorative />
+	<AccountDetails
+		v-else-if="icon === 'AccountDetails'"
+		slot="icon"
+		:size="16"
+		title=""
+		decorative />
+	<AccountVoice
+		v-else-if="icon === 'AccountVoice'"
+		slot="icon"
+		:size="16"
+		title=""
+		decorative />
+	<Bike
+		v-else-if="icon === 'Bike'"
+		slot="icon"
+		:size="16"
+		title=""
+		decorative />
+	<Cake
+		v-else-if="icon === 'Cake'"
+		slot="icon"
+		:size="16"
+		title=""
+		decorative />
+	<CommentPlus
+		v-else-if="icon === 'CommentPlus'"
+		slot="icon"
+		:size="16"
+		title=""
+		decorative />
+	<FoodVariant
+		v-else-if="icon === 'FoodVariant'"
+		slot="icon"
+		:size="16"
+		title=""
+		decorative />
 </template>
 
 <script>
