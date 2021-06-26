@@ -1,11 +1,7 @@
-<?php
-
-declare(strict_types=1);
-
 /**
- * @copyright Copyright (c) 2021, Joas Schilling <coding@schilljs.com>
+ * @copyright Copyright (c) 2019 Marco Ambrosini <marcoambrosini@pm.me>
  *
- * @author Joas Schilling <coding@schilljs.com>
+ * @author Marco Ambrosini <marcoambrosini@pm.me>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -16,21 +12,30 @@ declare(strict_types=1);
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-return [
-	'routes' => [
-		['name' => 'frontend#index', 'url' => '/', 'verb' => 'GET'],
-	],
-	'ocs-resources' => [
-		'lines' => ['url' => '/api/v1/lines'],
-		'editors' => ['url' => '/api/v1/lines/{lineId}/editors'],
-		'points' => ['url' => '/api/v1/lines/{lineId}/points'],
-	],
-];
+import Vue from 'vue'
+import Vuex, { Store } from 'vuex'
+import linesStore from './linesStore'
+import pointsStore from './pointsStore'
+
+Vue.use(Vuex)
+
+const mutations = {}
+
+export default new Store({
+	modules: {
+		linesStore,
+		pointsStore,
+	},
+
+	mutations,
+
+	strict: process.env.NODE_ENV !== 'production',
+})

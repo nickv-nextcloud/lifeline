@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types=1);
-
 /**
  * @copyright Copyright (c) 2021, Joas Schilling <coding@schilljs.com>
  *
@@ -24,13 +23,24 @@ declare(strict_types=1);
  *
  */
 
-return [
-	'routes' => [
-		['name' => 'frontend#index', 'url' => '/', 'verb' => 'GET'],
-	],
-	'ocs-resources' => [
-		'lines' => ['url' => '/api/v1/lines'],
-		'editors' => ['url' => '/api/v1/lines/{lineId}/editors'],
-		'points' => ['url' => '/api/v1/lines/{lineId}/points'],
-	],
-];
+namespace OCA\LifeLine\Controller;
+
+use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Controller;
+use OCP\IRequest;
+
+class FrontendController extends Controller {
+	public function __construct(string $appName,
+								IRequest $request) {
+		parent::__construct($appName, $request);
+	}
+
+	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 * @return TemplateResponse
+	 */
+	public function index(): TemplateResponse {
+		return new TemplateResponse('lifeline', 'main');
+	}
+}

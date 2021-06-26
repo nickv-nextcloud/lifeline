@@ -1,7 +1,3 @@
-<?php
-
-declare(strict_types=1);
-
 /**
  * @copyright Copyright (c) 2021, Joas Schilling <coding@schilljs.com>
  *
@@ -16,21 +12,39 @@ declare(strict_types=1);
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-return [
-	'routes' => [
-		['name' => 'frontend#index', 'url' => '/', 'verb' => 'GET'],
-	],
-	'ocs-resources' => [
-		'lines' => ['url' => '/api/v1/lines'],
-		'editors' => ['url' => '/api/v1/lines/{lineId}/editors'],
-		'points' => ['url' => '/api/v1/lines/{lineId}/points'],
-	],
-];
+import axios from '@nextcloud/axios'
+import { generateOcsUrl } from '@nextcloud/router'
+
+/**
+ * Get lines
+ *
+ * @returns {Object} The axios response
+ */
+const getLines = async function() {
+	return axios.get(generateOcsUrl('apps/lifeline/api/v1/lines'))
+}
+
+/**
+ * Create a new life line
+ *
+ * @param {string} name The name of the line
+ * @returns {Object} The axios response
+ */
+const createLine = async function(name) {
+	return axios.post(generateOcsUrl('apps/lifeline/api/v1/lines'), {
+		name,
+	})
+}
+
+export {
+	getLines,
+	createLine,
+}

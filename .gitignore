@@ -1,3 +1,6 @@
+/build
+/js
+/node_modules
 /tests/Integration/output
 /tests/Integration/vendor
 /vendor
