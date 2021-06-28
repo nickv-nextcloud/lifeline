@@ -19,31 +19,25 @@
 			</Modal>
 		</div>
 
-		<div
+		<Point
 			v-for="point in points"
-			:key="point.id">
-			<AccountDetails
-				slot="icon"
-				:size="16"
-				title=""
-				decorative />
-			{{ point.title }} - {{ point.datetime }}
-		</div>
+			v-bind="point"
+			:key="point.id" />
 	</div>
 </template>
 
 <script>
 import CreationModal from '../components/CreationModal'
+import Point from '../components/Point'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
-import AccountDetails from 'vue-material-design-icons/AccountDetails'
 import Plus from 'vue-material-design-icons/Plus'
 
 export default {
 	name: 'LineView',
 
 	components: {
-		AccountDetails,
 		CreationModal,
+		Point,
 		Modal,
 		Plus,
 	},
