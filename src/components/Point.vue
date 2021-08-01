@@ -97,8 +97,8 @@ export default {
 
 	&__content {
 		display: inline-block;
-		margin: -25px 0 0 -22px;
-		padding: 25px 0 25px 32px;
+		margin: -22px 0 0 -22px;
+		padding: 25px 0 15px 32px;
 		border-left: 5px solid var(--color-primary-light);
 	}
 

@@ -15,7 +15,9 @@
 			<Modal
 				v-if="modal"
 				@close="closeModal">
-				<CreationModal />
+				<CreationModal
+					:line-id="lineId"
+					@close="closeModal" />
 			</Modal>
 		</div>
 
@@ -30,6 +32,7 @@
 import CreationModal from '../components/CreationModal'
 import Point from '../components/Point'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
+import moment from '@nextcloud/moment'
 import Plus from 'vue-material-design-icons/Plus'
 
 export default {
@@ -57,12 +60,11 @@ export default {
 
 	computed: {
 		line() {
-			return this.$store.getters.getLine(this.lineId)
+			return this.$store.getters.getLine(this.lineId) || {}
 		},
 		points() {
-			const r = this.$store.getters.getPoints(this.lineId)
-			console.error(r)
-			return r
+			const r = Object.values(this.$store.getters.getPoints(this.lineId))
+			return r.slice().sort(this.sortPointsByDate)
 		},
 	},
 
@@ -88,6 +90,20 @@ export default {
 		},
 		closeModal() {
 			this.modal = false
+		},
+
+		/**
+		 *
+		 * @param {object} point1 First point
+		 * @param {string} point1.datetime First point date time in ATOM
+		 * @param {object} point2 Second point
+		 * @param {string} point2.datetime Second point date time in ATOM
+		 * @returns {number}
+		 */
+		sortPointsByDate(point1, point2) {
+			const date1 = moment(point1.datetime)
+			const date2 = moment(point2.datetime)
+			return date2 - date1
 		},
 	},
 }

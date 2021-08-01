@@ -35,6 +35,7 @@ import { getRequestToken } from '@nextcloud/auth'
 
 // Directives
 import { translate, translatePlural } from '@nextcloud/l10n'
+import { Tooltip } from '@nextcloud/vue'
 
 // Styles
 import '@nextcloud/dialogs/styles/toast.scss'
@@ -57,6 +58,7 @@ Vue.prototype.OCA = OCA
 
 Vue.use(Vuex)
 Vue.use(VueRouter)
+Vue.directive('tooltip', Tooltip)
 
 export const app = new Vue({
 	el: '#content',
