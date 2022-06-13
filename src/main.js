@@ -1,7 +1,7 @@
 /**
  * @copyright Copyright (c) 2021 Joas Schilling <coding@schilljs.com>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -23,11 +23,11 @@ import App from './App.vue'
 
 // Store
 import Vuex from 'vuex'
-import store from './store'
+import store from './store/index.js'
 
 // Router
 import VueRouter from 'vue-router'
-import router from './router'
+import router from './router.js'
 
 // Utils
 import { generateFilePath } from '@nextcloud/router'
@@ -35,6 +35,7 @@ import { getRequestToken } from '@nextcloud/auth'
 
 // Directives
 import { translate, translatePlural } from '@nextcloud/l10n'
+import { Tooltip } from '@nextcloud/vue'
 
 // Styles
 import '@nextcloud/dialogs/styles/toast.scss'
@@ -57,6 +58,7 @@ Vue.prototype.OCA = OCA
 
 Vue.use(Vuex)
 Vue.use(VueRouter)
+Vue.directive('tooltip', Tooltip)
 
 export const app = new Vue({
 	el: '#content',

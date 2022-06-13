@@ -3,7 +3,7 @@
  *
  * @author Joas Schilling <coding@schilljs.com>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -26,7 +26,7 @@ import { generateOcsUrl } from '@nextcloud/router'
 /**
  * Get lines
  *
- * @returns {Object} The axios response
+ * @return {object} The axios response
  */
 const getLines = async function() {
 	return axios.get(generateOcsUrl('apps/lifeline/api/v1/lines'))
@@ -36,7 +36,7 @@ const getLines = async function() {
  * Create a new life line
  *
  * @param {string} name The name of the line
- * @returns {Object} The axios response
+ * @return {object} The axios response
  */
 const createLine = async function(name) {
 	return axios.post(generateOcsUrl('apps/lifeline/api/v1/lines'), {

@@ -3,8 +3,7 @@
 		<h2>{{ t('lifeline', 'Create a new life line') }}</h2>
 
 		<template #icon>
-			<AccountDetails
-				slot="icon"
+			<AccountDetails slot="icon"
 				:size="64"
 				title=""
 				decorative />

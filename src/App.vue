@@ -20,26 +20,21 @@
   -
   -->
 <template>
-	<Content
-		app-name="lifeline">
+	<Content app-name="lifeline">
 		<AppNavigation :aria-label="t('lifeline', 'Life lines')">
 			<template #list>
-				<AppNavigationNewItem
-					:title="t('lifeline', 'New life line')"
+				<AppNavigationNewItem :title="t('lifeline', 'New life line')"
 					@new-item="createLine">
-					<Plus
-						slot="icon"
+					<Plus slot="icon"
 						:size="16"
 						title=""
 						decorative />
 				</AppNavigationNewItem>
-				<AppNavigationItem
-					v-for="line in lines"
+				<AppNavigationItem v-for="line in lines"
 					:key="line.id"
 					:title="line.name"
 					:to="routeTo(line)">
-					<AccountDetails
-						slot="icon"
+					<AccountDetails slot="icon"
 						:size="16"
 						title=""
 						decorative />

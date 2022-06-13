@@ -4,3 +4,4 @@
 /tests/Integration/output
 /tests/Integration/vendor
 /vendor
+/.php-cs-fixer.cache

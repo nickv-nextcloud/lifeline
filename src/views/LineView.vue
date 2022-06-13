@@ -3,47 +3,39 @@
 		<h2>{{ line.name }}</h2>
 
 		<div>
-			<button
-				class="primary"
+			<button class="primary"
 				@click="showModal">
-				<Plus
-					:size="16"
+				<Plus :size="16"
 					title=""
 					decorative />
 				{{ t('lifeline', 'Create new point') }}
 			</button>
-			<Modal
-				v-if="modal"
+			<Modal v-if="modal"
 				@close="closeModal">
-				<CreationModal />
+				<CreationModal :line-id="lineId"
+					@close="closeModal" />
 			</Modal>
 		</div>
 
-		<div
-			v-for="point in points"
-			:key="point.id">
-			<AccountDetails
-				slot="icon"
-				:size="16"
-				title=""
-				decorative />
-			{{ point.title }} - {{ point.datetime }}
-		</div>
+		<Point v-for="point in points"
+			v-bind="point"
+			:key="point.id" />
 	</div>
 </template>
 
 <script>
-import CreationModal from '../components/CreationModal'
+import CreationModal from '../components/CreationModal.vue'
+import Point from '../components/Point.vue'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
-import AccountDetails from 'vue-material-design-icons/AccountDetails'
+import moment from '@nextcloud/moment'
 import Plus from 'vue-material-design-icons/Plus'
 
 export default {
 	name: 'LineView',
 
 	components: {
-		AccountDetails,
 		CreationModal,
+		Point,
 		Modal,
 		Plus,
 	},
@@ -63,12 +55,11 @@ export default {
 
 	computed: {
 		line() {
-			return this.$store.getters.getLine(this.lineId)
+			return this.$store.getters.getLine(this.lineId) || {}
 		},
 		points() {
-			const r = this.$store.getters.getPoints(this.lineId)
-			console.error(r)
-			return r
+			const r = Object.values(this.$store.getters.getPoints(this.lineId))
+			return r.slice().sort(this.sortPointsByDate)
 		},
 	},
 
@@ -94,6 +85,20 @@ export default {
 		},
 		closeModal() {
 			this.modal = false
+		},
+
+		/**
+		 *
+		 * @param {object} point1 First point
+		 * @param {string} point1.datetime First point date time in ATOM
+		 * @param {object} point2 Second point
+		 * @param {string} point2.datetime Second point date time in ATOM
+		 * @return {number}
+		 */
+		sortPointsByDate(point1, point2) {
+			const date1 = moment(point1.datetime)
+			const date2 = moment(point2.datetime)
+			return date2 - date1
 		},
 	},
 }
