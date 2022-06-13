@@ -4,8 +4,7 @@
 
 		<p>
 			<label for="icon">{{ t('lifeline', 'Icon') }}</label>
-			<input
-				id="icon"
+			<input id="icon"
 				v-model="icon"
 				type="text"
 				placeholder="Multiselect">
@@ -13,15 +12,13 @@
 
 		<p>
 			<label for="title">{{ t('lifeline', 'Headline') }}</label>
-			<input
-				id="title"
+			<input id="title"
 				v-model="title"
 				type="text">
 		</p>
 
 		<p class="modal__content__highlight">
-			<CheckboxRadioSwitch
-				id="highlight"
+			<CheckboxRadioSwitch id="highlight"
 				:checked.sync="highlight"
 				type="switch">
 				{{ t('lifeline', 'Highlight') }}
@@ -30,8 +27,7 @@
 
 		<p>
 			<label for="title">{{ t('lifeline', 'Story') }}</label>
-			<RichContenteditable
-				:value.sync="description"
+			<RichContenteditable :value.sync="description"
 				:auto-complete="() => {}"
 				:maxlength="400"
 				:multiline="true"
@@ -40,16 +36,14 @@
 
 		<p>
 			<label for="datetime">{{ t('lifeline', 'Date') }}</label>
-			<DatetimePicker
-				v-model="datetime"
+			<DatetimePicker v-model="datetime"
 				:input-attr="{
 					id: 'datetime'
 				}"
 				type="date" />
 		</p>
 
-		<button
-			class="modal__content__submit primary"
+		<button class="modal__content__submit primary"
 			@click="createPoint">
 			{{ t('lifeline', 'Create point') }}
 		</button>

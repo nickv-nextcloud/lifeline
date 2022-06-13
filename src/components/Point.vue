@@ -1,17 +1,14 @@
 <template>
-	<div
-		:key="id"
+	<div :key="id"
 		class="point">
 		<div class="point__date">
 			{{ dateLabel }}
 		</div>
-		<PointIcon
-			:highlight="highlight"
+		<PointIcon :highlight="highlight"
 			:icon="icon"
 			:size="32" />
 		<div class="point__content">
-			<h3
-				class="point__title"
+			<h3 class="point__title"
 				:class="{ 'point__title--highlight': highlight }">
 				{{ title }}
 			</h3>
@@ -21,7 +18,7 @@
 </template>
 
 <script>
-import PointIcon from './PointIcon'
+import PointIcon from './PointIcon.vue'
 import moment from '@nextcloud/moment'
 
 export default {

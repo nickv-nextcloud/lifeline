@@ -3,7 +3,7 @@
  *
  * @author Joas Schilling <coding@schilljs.com>
  *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -26,8 +26,8 @@ import { generateOcsUrl } from '@nextcloud/router'
 /**
  * Get points
  *
- * @param {int} lineId The life line id to get the points for
- * @returns {Object} The axios response
+ * @param {number} lineId The life line id to get the points for
+ * @return {object} The axios response
  */
 const getPoints = async function(lineId) {
 	return axios.get(generateOcsUrl('apps/lifeline/api/v1/lines/{lineId}/points', { lineId }))
@@ -36,9 +36,9 @@ const getPoints = async function(lineId) {
 /**
  * Create a new point
  *
- * @param {int} lineId The life line id to add a new point on
- * @param {Object} point The point for the line
- * @returns {Object} The axios response
+ * @param {number} lineId The life line id to add a new point on
+ * @param {object} point The point for the line
+ * @return {object} The axios response
  */
 const createPoint = async function(lineId, point) {
 	return axios.post(generateOcsUrl('apps/lifeline/api/v1/lines/{lineId}/points', { lineId }), point)

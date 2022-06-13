@@ -3,34 +3,29 @@
 		<h2>{{ line.name }}</h2>
 
 		<div>
-			<button
-				class="primary"
+			<button class="primary"
 				@click="showModal">
-				<Plus
-					:size="16"
+				<Plus :size="16"
 					title=""
 					decorative />
 				{{ t('lifeline', 'Create new point') }}
 			</button>
-			<Modal
-				v-if="modal"
+			<Modal v-if="modal"
 				@close="closeModal">
-				<CreationModal
-					:line-id="lineId"
+				<CreationModal :line-id="lineId"
 					@close="closeModal" />
 			</Modal>
 		</div>
 
-		<Point
-			v-for="point in points"
+		<Point v-for="point in points"
 			v-bind="point"
 			:key="point.id" />
 	</div>
 </template>
 
 <script>
-import CreationModal from '../components/CreationModal'
-import Point from '../components/Point'
+import CreationModal from '../components/CreationModal.vue'
+import Point from '../components/Point.vue'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import moment from '@nextcloud/moment'
 import Plus from 'vue-material-design-icons/Plus'
@@ -98,7 +93,7 @@ export default {
 		 * @param {string} point1.datetime First point date time in ATOM
 		 * @param {object} point2 Second point
 		 * @param {string} point2.datetime Second point date time in ATOM
-		 * @returns {number}
+		 * @return {number}
 		 */
 		sortPointsByDate(point1, point2) {
 			const date1 = moment(point1.datetime)

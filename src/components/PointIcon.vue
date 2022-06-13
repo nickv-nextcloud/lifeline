@@ -1,51 +1,42 @@
 <template>
-	<div
-		class="point__icon"
+	<div class="point__icon"
 		:class="{ 'point__icon--highlight': highlight }">
-		<Account
-			v-if="icon === 'Account'"
+		<Account v-if="icon === 'Account'"
 			slot="icon"
 			:size="size"
 			title=""
 			decorative />
-		<AccountDetails
-			v-else-if="icon === 'AccountDetails'"
+		<AccountDetails v-else-if="icon === 'AccountDetails'"
 			slot="icon"
 			:size="size"
 			title=""
 			decorative />
-		<AccountVoice
-			v-else-if="icon === 'AccountVoice'"
+		<AccountVoice v-else-if="icon === 'AccountVoice'"
 			slot="icon"
 			:size="size"
 			title=""
 			decorative />
-		<Bike
-			v-else-if="icon === 'Bike'"
+		<Bike v-else-if="icon === 'Bike'"
 			slot="icon"
 			:size="size"
 			title=""
 			decorative />
-		<Cake
-			v-else-if="icon === 'Cake'"
+		<Cake v-else-if="icon === 'Cake'"
 			slot="icon"
 			:size="size"
 			title=""
 			decorative />
-		<CommentPlus
-			v-else-if="icon === 'CommentPlus'"
+		<CommentPlus v-else-if="icon === 'CommentPlus'"
 			slot="icon"
 			:size="size"
 			title=""
 			decorative />
-		<FoodVariant
-			v-else-if="icon === 'FoodVariant'"
+		<FoodVariant v-else-if="icon === 'FoodVariant'"
 			slot="icon"
 			:size="size"
 			title=""
 			decorative />
-		<AccountDetails
-			v-else
+		<AccountDetails v-else
 			slot="icon"
 			:size="size"
 			title=""

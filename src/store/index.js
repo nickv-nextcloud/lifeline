@@ -1,9 +1,7 @@
 /**
- * @copyright Copyright (c) 2019 Marco Ambrosini <marcoambrosini@pm.me>
+ * @copyright Copyright (c) 2021 Joas Schilling <coding@schilljs.com>
  *
- * @author Marco Ambrosini <marcoambrosini@pm.me>
- *
- * @license GNU AGPL version 3 or any later version
+ * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -22,8 +20,8 @@
 
 import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
-import linesStore from './linesStore'
-import pointsStore from './pointsStore'
+import linesStore from './linesStore.js'
+import pointsStore from './pointsStore.js'
 
 Vue.use(Vuex)
 
