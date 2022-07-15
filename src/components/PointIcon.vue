@@ -3,44 +3,28 @@
 		:class="{ 'point__icon--highlight': highlight }">
 		<Account v-if="icon === 'Account'"
 			slot="icon"
-			:size="size"
-			title=""
-			decorative />
+			:size="size" />
 		<AccountDetails v-else-if="icon === 'AccountDetails'"
 			slot="icon"
-			:size="size"
-			title=""
-			decorative />
+			:size="size" />
 		<AccountVoice v-else-if="icon === 'AccountVoice'"
 			slot="icon"
-			:size="size"
-			title=""
-			decorative />
+			:size="size" />
 		<Bike v-else-if="icon === 'Bike'"
 			slot="icon"
-			:size="size"
-			title=""
-			decorative />
+			:size="size" />
 		<Cake v-else-if="icon === 'Cake'"
 			slot="icon"
-			:size="size"
-			title=""
-			decorative />
+			:size="size" />
 		<CommentPlus v-else-if="icon === 'CommentPlus'"
 			slot="icon"
-			:size="size"
-			title=""
-			decorative />
+			:size="size" />
 		<FoodVariant v-else-if="icon === 'FoodVariant'"
 			slot="icon"
-			:size="size"
-			title=""
-			decorative />
+			:size="size" />
 		<AccountDetails v-else
 			slot="icon"
-			:size="size"
-			title=""
-			decorative />
+			:size="size" />
 	</div>
 </template>
 

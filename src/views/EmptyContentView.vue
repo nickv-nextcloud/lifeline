@@ -4,9 +4,7 @@
 
 		<template #icon>
 			<AccountDetails slot="icon"
-				:size="64"
-				title=""
-				decorative />
+				:size="64" />
 		</template>
 
 		<template #desc>

@@ -26,18 +26,14 @@
 				<AppNavigationNewItem :title="t('lifeline', 'New life line')"
 					@new-item="createLine">
 					<Plus slot="icon"
-						:size="16"
-						title=""
-						decorative />
+						:size="16" />
 				</AppNavigationNewItem>
 				<AppNavigationItem v-for="line in lines"
 					:key="line.id"
 					:title="line.name"
 					:to="routeTo(line)">
 					<AccountDetails slot="icon"
-						:size="16"
-						title=""
-						decorative />
+						:size="16" />
 				</AppNavigationItem>
 			</template>
 		</AppNavigation>
