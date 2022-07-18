@@ -5,9 +5,7 @@
 		<div>
 			<button class="primary"
 				@click="showModal">
-				<Plus :size="16"
-					title=""
-					decorative />
+				<Plus :size="16" />
 				{{ t('lifeline', 'Create new point') }}
 			</button>
 			<Modal v-if="modal"
