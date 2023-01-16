@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
-import AccountDetails from 'vue-material-design-icons/AccountDetails'
+import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent.js'
+import AccountDetails from 'vue-material-design-icons/AccountDetails.vue'
 
 export default {
 	name: 'EmptyContentView',

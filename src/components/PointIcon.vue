@@ -29,13 +29,13 @@
 </template>
 
 <script>
-import Account from 'vue-material-design-icons/Account'
-import AccountDetails from 'vue-material-design-icons/AccountDetails'
-import AccountVoice from 'vue-material-design-icons/AccountVoice'
-import Bike from 'vue-material-design-icons/Bike'
-import Cake from 'vue-material-design-icons/Cake'
-import CommentPlus from 'vue-material-design-icons/CommentPlus'
-import FoodVariant from 'vue-material-design-icons/FoodVariant'
+import Account from 'vue-material-design-icons/Account.vue'
+import AccountDetails from 'vue-material-design-icons/AccountDetails.vue'
+import AccountVoice from 'vue-material-design-icons/AccountVoice.vue'
+import Bike from 'vue-material-design-icons/Bike.vue'
+import Cake from 'vue-material-design-icons/Cake.vue'
+import CommentPlus from 'vue-material-design-icons/CommentPlus.vue'
+import FoodVariant from 'vue-material-design-icons/FoodVariant.vue'
 
 export default {
 	name: 'PointIcon',

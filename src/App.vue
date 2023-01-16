@@ -20,7 +20,7 @@
   -
   -->
 <template>
-	<Content app-name="lifeline">
+	<NcContent app-name="lifeline">
 		<AppNavigation :aria-label="t('lifeline', 'Life lines')">
 			<template #list>
 				<AppNavigationNewItem :title="t('lifeline', 'New life line')"
@@ -40,17 +40,17 @@
 		<AppContent>
 			<router-view />
 		</AppContent>
-	</Content>
+	</NcContent>
 </template>
 
 <script>
-import AppContent from '@nextcloud/vue/dist/Components/AppContent'
-import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
-import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
-import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem'
-import Content from '@nextcloud/vue/dist/Components/Content'
-import AccountDetails from 'vue-material-design-icons/AccountDetails'
-import Plus from 'vue-material-design-icons/Plus'
+import AppContent from '@nextcloud/vue/dist/Components/AppContent.js'
+import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation.js'
+import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem.js'
+import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem.js'
+import NcContent from '@nextcloud/vue/dist/Components/Content.js'
+import AccountDetails from 'vue-material-design-icons/AccountDetails.vue'
+import Plus from 'vue-material-design-icons/Plus.vue'
 import { showError } from '@nextcloud/dialogs'
 
 export default {
@@ -62,7 +62,7 @@ export default {
 		AppNavigation,
 		AppNavigationItem,
 		AppNavigationNewItem,
-		Content,
+		NcContent,
 		Plus,
 	},
 
