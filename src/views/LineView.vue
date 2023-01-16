@@ -24,9 +24,9 @@
 <script>
 import CreationModal from '../components/CreationModal.vue'
 import Point from '../components/Point.vue'
-import Modal from '@nextcloud/vue/dist/Components/Modal'
+import Modal from '@nextcloud/vue/dist/Components/Modal.js'
 import moment from '@nextcloud/moment'
-import Plus from 'vue-material-design-icons/Plus'
+import Plus from 'vue-material-design-icons/Plus.vue'
 
 export default {
 	name: 'LineView',

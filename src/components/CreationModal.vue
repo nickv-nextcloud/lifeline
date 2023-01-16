@@ -51,9 +51,9 @@
 </template>
 
 <script>
-import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
-import DatetimePicker from '@nextcloud/vue/dist/Components/DatetimePicker'
-import RichContenteditable from '@nextcloud/vue/dist/Components/RichContenteditable'
+import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch.js'
+import DatetimePicker from '@nextcloud/vue/dist/Components/DatetimePicker.js'
+import RichContenteditable from '@nextcloud/vue/dist/Components/RichContenteditable.js'
 import { showError } from '@nextcloud/dialogs'
 
 export default {
