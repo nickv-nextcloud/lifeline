@@ -2,28 +2,20 @@
 	<div class="point__icon"
 		:class="{ 'point__icon--highlight': highlight }">
 		<Account v-if="icon === 'Account'"
-			slot="icon"
 			:size="size" />
 		<AccountDetails v-else-if="icon === 'AccountDetails'"
-			slot="icon"
 			:size="size" />
 		<AccountVoice v-else-if="icon === 'AccountVoice'"
-			slot="icon"
 			:size="size" />
 		<Bike v-else-if="icon === 'Bike'"
-			slot="icon"
 			:size="size" />
 		<Cake v-else-if="icon === 'Cake'"
-			slot="icon"
 			:size="size" />
 		<CommentPlus v-else-if="icon === 'CommentPlus'"
-			slot="icon"
 			:size="size" />
 		<FoodVariant v-else-if="icon === 'FoodVariant'"
-			slot="icon"
 			:size="size" />
 		<AccountDetails v-else
-			slot="icon"
 			:size="size" />
 	</div>
 </template>

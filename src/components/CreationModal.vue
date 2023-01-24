@@ -18,16 +18,16 @@
 		</p>
 
 		<p class="modal__content__highlight">
-			<CheckboxRadioSwitch id="highlight"
+			<NcCheckboxRadioSwitch id="highlight"
 				:checked.sync="highlight"
 				type="switch">
 				{{ t('lifeline', 'Highlight') }}
-			</CheckboxRadioSwitch>
+			</NcCheckboxRadioSwitch>
 		</p>
 
 		<p>
 			<label for="title">{{ t('lifeline', 'Story') }}</label>
-			<RichContenteditable :value.sync="description"
+			<NcRichContenteditable :value.sync="description"
 				:auto-complete="() => {}"
 				:maxlength="400"
 				:multiline="true"
@@ -36,7 +36,7 @@
 
 		<p>
 			<label for="datetime">{{ t('lifeline', 'Date') }}</label>
-			<DatetimePicker v-model="datetime"
+			<NcDatetimePicker v-model="datetime"
 				:input-attr="{
 					id: 'datetime'
 				}"
@@ -51,18 +51,18 @@
 </template>
 
 <script>
-import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch.js'
-import DatetimePicker from '@nextcloud/vue/dist/Components/DatetimePicker.js'
-import RichContenteditable from '@nextcloud/vue/dist/Components/RichContenteditable.js'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
+import NcDatetimePicker from '@nextcloud/vue/dist/Components/NcDatetimePicker.js'
+import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
 import { showError } from '@nextcloud/dialogs'
 
 export default {
 	name: 'CreationModal',
 
 	components: {
-		CheckboxRadioSwitch,
-		DatetimePicker,
-		RichContenteditable,
+		NcCheckboxRadioSwitch,
+		NcDatetimePicker,
+		NcRichContenteditable,
 	},
 
 	props: {

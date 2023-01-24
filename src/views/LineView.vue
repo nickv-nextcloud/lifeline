@@ -8,11 +8,11 @@
 				<Plus :size="16" />
 				{{ t('lifeline', 'Create new point') }}
 			</button>
-			<Modal v-if="modal"
+			<NcModal v-if="modal"
 				@close="closeModal">
 				<CreationModal :line-id="lineId"
 					@close="closeModal" />
-			</Modal>
+			</NcModal>
 		</div>
 
 		<Point v-for="point in points"
@@ -24,7 +24,7 @@
 <script>
 import CreationModal from '../components/CreationModal.vue'
 import Point from '../components/Point.vue'
-import Modal from '@nextcloud/vue/dist/Components/Modal.js'
+import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 import moment from '@nextcloud/moment'
 import Plus from 'vue-material-design-icons/Plus.vue'
 
@@ -34,7 +34,7 @@ export default {
 	components: {
 		CreationModal,
 		Point,
-		Modal,
+		NcModal,
 		Plus,
 	},
 

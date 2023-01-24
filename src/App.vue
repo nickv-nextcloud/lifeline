@@ -21,34 +21,34 @@
   -->
 <template>
 	<NcContent app-name="lifeline">
-		<AppNavigation :aria-label="t('lifeline', 'Life lines')">
+		<NcAppNavigation :aria-label="t('lifeline', 'Life lines')">
 			<template #list>
-				<AppNavigationNewItem :title="t('lifeline', 'New life line')"
+				<NcAppNavigationNewItem :title="t('lifeline', 'New life line')"
 					@new-item="createLine">
 					<Plus slot="icon"
 						:size="16" />
-				</AppNavigationNewItem>
-				<AppNavigationItem v-for="line in lines"
+				</NcAppNavigationNewItem>
+				<NcAppNavigationItem v-for="line in lines"
 					:key="line.id"
 					:title="line.name"
 					:to="routeTo(line)">
 					<AccountDetails slot="icon"
 						:size="16" />
-				</AppNavigationItem>
+				</NcAppNavigationItem>
 			</template>
-		</AppNavigation>
-		<AppContent>
+		</NcAppNavigation>
+		<NcAppContent>
 			<router-view />
-		</AppContent>
+		</NcAppContent>
 	</NcContent>
 </template>
 
 <script>
-import AppContent from '@nextcloud/vue/dist/Components/AppContent.js'
-import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation.js'
-import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem.js'
-import AppNavigationNewItem from '@nextcloud/vue/dist/Components/AppNavigationNewItem.js'
-import NcContent from '@nextcloud/vue/dist/Components/Content.js'
+import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
+import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
+import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
+import NcAppNavigationNewItem from '@nextcloud/vue/dist/Components/NcAppNavigationNewItem.js'
+import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
 import AccountDetails from 'vue-material-design-icons/AccountDetails.vue'
 import Plus from 'vue-material-design-icons/Plus.vue'
 import { showError } from '@nextcloud/dialogs'
@@ -57,12 +57,12 @@ export default {
 	name: 'App',
 
 	components: {
-		AccountDetails,
-		AppContent,
-		AppNavigation,
-		AppNavigationItem,
-		AppNavigationNewItem,
+		NcAppContent,
+		NcAppNavigation,
+		NcAppNavigationItem,
+		NcAppNavigationNewItem,
 		NcContent,
+		AccountDetails,
 		Plus,
 	},
 

@@ -1,20 +1,14 @@
 <template>
-	<EmptyContent>
-		<h2>{{ t('lifeline', 'Create a new life line') }}</h2>
-
+	<NcEmptyContent :title="t('lifeline', 'Create a new life line')"
+		:description="t('lifeline', 'Or edit an existing one')">
 		<template #icon>
-			<AccountDetails slot="icon"
-				:size="64" />
+			<AccountDetails :size="64" />
 		</template>
-
-		<template #desc>
-			{{ t('lifeline', 'Or edit an existing one') }}
-		</template>
-	</EmptyContent>
+	</NcEmptyContent>
 </template>
 
 <script>
-import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent.js'
+import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 import AccountDetails from 'vue-material-design-icons/AccountDetails.vue'
 
 export default {
@@ -22,7 +16,7 @@ export default {
 
 	components: {
 		AccountDetails,
-		EmptyContent,
+		NcEmptyContent,
 	},
 }
 </script>
