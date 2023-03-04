@@ -13,7 +13,7 @@ cp -R ./app ../../../lifelineintegrationtesting
 #echo $PHPPID
 
 ${ROOT_DIR}/occ app:enable $APP_NAME
-${ROOT_DIR}/occ app:enable lifelineintegrationtesting
+${ROOT_DIR}/occ app:enable --force lifelineintegrationtesting
 ${ROOT_DIR}/occ app:list | grep $APP_NAME
 ${ROOT_DIR}/occ app:list | grep lifelineintegrationtesting
 
