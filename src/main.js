@@ -38,7 +38,7 @@ import { translate, translatePlural } from '@nextcloud/l10n'
 import { Tooltip } from '@nextcloud/vue'
 
 // Styles
-import '@nextcloud/dialogs/styles/toast.scss'
+import '@nextcloud/dialogs/dist/index.css'
 
 // CSP config for webpack dynamic chunk loading
 // eslint-disable-next-line
